@@ -1,0 +1,92 @@
+#!/bin/bash
+#########################################
+##              LATEXGEN               ##
+#########################################
+##"
+##   Author: Alejandro Aguayo-Ortiz"
+##   Email: aaguayoo92@ciencias.unam.mx"
+##   Date: Septemer, 2020"
+##"
+#########################################
+
+###############################
+## COMMAND LINE HELP AND INFO##
+###############################
+display_help(){
+   echo ""
+   echo "######################################################################"
+   echo "##                             LATEXGEN                             ##"
+   echo "######################################################################"
+   echo "##"
+   echo "##   Author: Alejandro Aguayo-Ortiz"
+   echo "##   Email: aaguayoo92@ciencias.unam.mx"
+   echo "##   Date: Septemer, 2020"
+   echo "##"
+   echo "##   Description: This command generates a LaTeX Project in a specific"
+   echo "##   repository."
+   echo "##"
+   echo "##   Usage: latexgen [options]" 
+   echo "##          latexgen {article|beamer|book} </path/to/presentation>"
+   echo "##"
+   echo "##          -h, --help: Displays command info"
+   echo "##"
+   echo "######################################################################"
+   echo ""
+}
+
+#####################
+## LOCAL VARIABLES ##
+#####################
+path=$2
+
+#####################
+## LOCAL FUNCTIONS ##
+#####################
+
+# No local functions
+
+#######################
+## CHECK FOR OPTIONS ##
+#######################
+while :
+do
+   case "$1" in
+      -h | --help)
+         display_help
+         exit 0
+         ;;
+      --) # End of all options
+          shift
+          break
+          ;;
+      -*)
+          echo "Error: Unknown option: $1" >&2
+          ## or call function display_help
+          exit 1 
+          ;;
+      *)  # No more options
+         break
+         ;;
+   esac
+done
+
+##########################
+## CHECK FOR PARAMETERS ##
+##########################
+case "$1" in
+   article)
+      echo 'Unzipping Article-Notes.zip to' ${2}
+      zip='Article-Notes'
+      ;;
+   beamer)
+      echo 'Unzipping Beamer.zip to' ${2}
+      zip='Beamer'
+      ;;
+   *)
+      display_help
+      exit 0
+      ;;
+esac
+
+unzip /usr/local/bin/$zip.zip -d $path
+find $path -type f | xargs touch # Solve clock skew
